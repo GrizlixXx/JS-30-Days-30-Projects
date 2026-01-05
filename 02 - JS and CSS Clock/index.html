@@ -93,37 +93,37 @@
         transform: rotate(30deg) translateY(-20px);
       }
       .tick-2 {
-        transform: rotate(60deg) translateY(-20px);
+        transform: rotate(61deg) translateY(-20px);
       }
       .tick-3 {
-        transform: rotate(90deg) translateY(-20px);
+        transform: rotate(91deg) translateY(-20px);
       }
       .tick-4 {
-        transform: rotate(120deg) translateY(-20px);
+        transform: rotate(121deg) translateY(-20px);
       }
       .tick-5 {
-        transform: rotate(150deg) translateY(-20px);
+        transform: rotate(151deg) translateY(-20px);
       }
       .tick-6 {
-        transform: rotate(180deg) translateY(-20px);
+        transform: rotate(181deg) translateY(-20px);
       }
       .tick-7 {
-        transform: rotate(210deg) translateY(-20px);
+        transform: rotate(211deg) translateY(-20px);
       }
       .tick-8 {
-        transform: rotate(240deg) translateY(-20px);
+        transform: rotate(239deg) translateY(-20px);
       }
       .tick-9 {
-        transform: rotate(270deg) translateY(-20px);
+        transform: rotate(269deg) translateY(-20px);
       }
       .tick-10 {
-        transform: rotate(300deg) translateY(-20px);
+        transform: rotate(299deg) translateY(-20px);
       }
       .tick-11 {
-        transform: rotate(330deg) translateY(-20px);
+        transform: rotate(329deg) translateY(-20px);
       }
       .tick-12 {
-        transform: rotate(0deg) translateY(-20px);
+        transform: rotate(-1deg) translateY(-20px);
       }
 
       .hand {
@@ -165,14 +165,32 @@
 
         const seconds = now.getSeconds();
         const secondsDegrees = (seconds / 60) * 360 + 90;
+
+        if (seconds === 0) {
+          secondHand.style.transition = 'none';
+        } else {
+          secondHand.style.transition = '';
+        }
         secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
 
         const mins = now.getMinutes();
         const minsDegrees = (mins / 60) * 360 + (seconds / 60) * 6 + 90;
+
+        if (mins === 0 && seconds === 0) {
+          minsHand.style.transition = 'none';
+        } else {
+          minsHand.style.transition = '';
+        }
         minsHand.style.transform = `rotate(${minsDegrees}deg)`;
 
         const hour = now.getHours();
         const hourDegrees = (hour / 12) * 360 + (mins / 60) * 30 + 90;
+
+        if (hour % 12 === 0 && mins === 0) {
+          hourHand.style.transition = 'none';
+        } else {
+          hourHand.style.transition = '';
+        }
         hourHand.style.transform = `rotate(${hourDegrees}deg)`;
       }
 
