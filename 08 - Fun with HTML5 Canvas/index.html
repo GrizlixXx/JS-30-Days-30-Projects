@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <button id="modeBtn">Режим: Hue</button>
+    <button id="clearBtn">Очистити</button>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+      const canvas = document.querySelector('#draw');
+      /** @type {CanvasRenderingContext2D} */
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.globalCompositeOperation = 'hue';
+
+      let isDrawing = false;
+      let [PX, PY] = [0, 0];
+      let hue = 0;
+      let direction = true;
+      let drawCount = 0;
+
+      const modes = [
+        { name: 'Звичайний', value: 'source-over' },
+        { name: 'Hue', value: 'hue' },
+        { name: 'Multiply', value: 'multiply' },
+        { name: 'Screen', value: 'screen' },
+        { name: 'Lighten', value: 'lighten' },
+      ];
+      let currentModeIndex = 1;
+
+      function draw(e) {
+        if (!isDrawing) return;
+        console.log(e);
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.beginPath();
+        ctx.moveTo(PX, PY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        [PX, PY] = [e.offsetX, e.offsetY];
+        hue <= 360 ? hue++ : (hue = 0);
+        drawCount++;
+        if (drawCount % 5 === 0) {
+          if (ctx.lineWidth >= 150 || ctx.lineWidth <= 1) {
+            direction = !direction;
+          }
+          ctx.lineWidth += direction ? 1 : -1;
+        }
+      }
+
+      canvas.addEventListener('mousedown', e => {
+        isDrawing = true;
+        [PX, PY] = [e.offsetX, e.offsetY];
+        canvas.addEventListener('mouseup', () => (isDrawing = false));
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseout', () => (isDrawing = false));
+      });
+
+      const modeBtn = document.querySelector('#modeBtn');
+      modeBtn.addEventListener('click', () => {
+        currentModeIndex = (currentModeIndex + 1) % modes.length;
+        ctx.globalCompositeOperation = modes[currentModeIndex].value;
+        modeBtn.textContent = `Режим: ${modes[currentModeIndex].name}`;
+      });
+
+      const clearBtn = document.querySelector('#clearBtn');
+      clearBtn.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      });
+    </script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #modeBtn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid #333;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      #modeBtn:hover {
+        background: #333;
+        color: white;
+        transform: scale(1.05);
+      }
+
+      #clearBtn {
+        position: fixed;
+        top: 20px;
+        left: 200px;
+        padding: 12px 24px;
+        background: rgba(255, 100, 100, 0.9);
+        border: 2px solid #c33;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        color: white;
+      }
+
+      #clearBtn:hover {
+        background: #c33;
+        transform: scale(1.05);
+      }
+    </style>
+  </body>
+</html>
